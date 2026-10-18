@@ -1,101 +1,203 @@
 # Module4_ITAI2372
-Financial News Sentiment & Insight Analyzer
-An interactive Python application that analyzes finance-related news articles by classifying their topic sector, estimating the sentiment of their wording, and generating an AI summary. It uses a Gradio interface and a locally loaded DistilBART summarization model, so it does not require a paid LLM API or API key.
-Features
-- News filtering: Selects finance-related articles from the HuffPost News Category Dataset using keyword-based filtering.
-- Sector classification: Assigns each selected article to a rule-based sector, such as Stocks & Investments, Banking & Credit, or Economy & Employment.
-- Sentiment analysis: Uses VADER to label article sentiment as positive, neutral, or negative and provide a compound score.
-- AI-generated summaries: Uses sshleifer/distilbart-cnn-12-6 through Hugging Face Transformers.
-- Interactive UI: Uses Gradio to let users select an article and view its headline, sector, sentiment, score, and generated summary.
-Technology stack
+# Financial News Sentiment & Insight Analyzer
+
+## Project Overview
+
+The Financial News Sentiment & Insight Analyzer is a Python-based application that analyzes finance-related news articles using sentiment analysis, sector classification, and AI-generated text summarization. It provides an interactive interface that allows users to select a news article and view its key information and analysis.
+
+The project uses the HuffPost News Category Dataset, VADER sentiment analysis, a locally running DistilBART summarization model, and Gradio to create an interactive application without requiring a paid AI API.
+
+## Features
+
+- **Financial News Filtering:** Filters finance-related articles from the HuffPost News Category Dataset using keyword-based rules.
+- **Sector Classification:** Categorizes articles into sectors such as Stocks & Investments, Banking & Credit, Business & Workplace, and Economy & Employment.
+- **Sentiment Analysis:** Uses VADER to classify article sentiment as positive, neutral, or negative and calculate a compound sentiment score.
+- **AI-Generated Summarization:** Uses the pretrained DistilBART model to generate concise summaries of selected articles.
+- **Interactive User Interface:** Uses Gradio to let users select articles and view their headline, sector, sentiment, score, and AI-generated summary.
+
+## Technologies Used
+
 - Python
-- pandas
-- VADER Sentiment (vaderSentiment)
+- Pandas
+- VADER Sentiment Analysis
 - Hugging Face Transformers
 - PyTorch
+- DistilBART (`sshleifer/distilbart-cnn-12-6`)
 - Gradio
-- Google Colab (recommended environment)
-Dataset
-This project uses the HuffPost News Category Dataset, specifically News_Category_Dataset_v3.json. The notebook combines each article's headline and short_description into text and applies keyword-based filtering to create a finance-related subset.
-The current notebook run produced approximately 8,361 articles. Because the original dataset covers many news categories and the finance subset is keyword-filtered, it may include articles that mention financial topics without being strictly financial-market news.
-Place News_Category_Dataset_v3.json in the location expected by the notebook, or update the notebook's dataset path. Make sure you have the right to access and use the dataset under its applicable terms.
-Requirements
-- A Python environment compatible with the installed versions of PyTorch and Transformers.
-- Internet access on the first run to download model files (and the dataset, if needed).
-- Enough RAM and disk space to load the dataset and model. Summarization can run on CPU if no supported GPU is available, but inference may take several seconds per article.
-The working notebook uses AutoTokenizer and AutoModelForSeq2SeqLM directly rather than the Transformers summarization pipeline, because that pipeline task was unavailable in the environment used during development.
-Installation
-Option 1: Google Colab (recommended)
+- Google Colab
+
+## Dataset
+
+This project uses the HuffPost News Category Dataset, specifically `News_Category_Dataset_v3.json`.
+
+The dataset contains news headlines, short descriptions, publication information, and news categories. The project combines each headline with its short description and uses keyword-based filtering to identify finance-related articles.
+
+The current dataset-processing workflow produced approximately 8,361 finance-related articles.
+
+Because the original dataset covers a broad range of news topics, the filtered subset may contain articles that mention financial subjects without being exclusively about financial markets.
+
+## Installation and Setup
+
+### Option 1: Run in Google Colab
+
+Google Colab is the recommended environment for this project.
+
 1. Open the project notebook in Google Colab.
-2. Upload or make News_Category_Dataset_v3.json available at the path used by the notebook.
-3. Install the packages in a notebook cell:
+2. Upload `News_Category_Dataset_v3.json` or place it in the location expected by the notebook.
+3. Install the required dependencies by running the following command in a notebook cell:
+
+   ```python
    %pip install -q pandas vaderSentiment transformers torch gradio
-4. Run the notebook cells in order to load and filter the dataset, create sector and sentiment columns, load the tokenizer and model, define the analyzer, and launch the Gradio interface.
-5. The first model load downloads the tokenizer and model weights, so it can take a few minutes.
-If your notebook already has a working environment, avoid reinstalling or downgrading Transformers unnecessarily.
-Option 2: Run locally
-1. Clone or download this repository.
-2. Create and activate a virtual environment:
+   ```
+
+4. Run the notebook cells in order to load the dataset, preprocess the text, classify sectors, perform sentiment analysis, and load the summarization model.
+5. Run the cell containing the Gradio interface.
+6. Open the URL displayed by Gradio to access the application.
+
+The first model download may take several minutes. The summarization model runs locally and does not require a paid API key.
+
+### Option 2: Run Locally
+
+1. Download or clone this repository.
+2. Install Python and create a virtual environment:
+
+   ```bash
    python -m venv .venv
-   Windows PowerShell:
+   ```
+
+3. Activate the virtual environment.
+
+   **Windows PowerShell:**
+
+   ```powershell
    .venv\Scripts\Activate.ps1
-   macOS/Linux:
+   ```
+
+   **macOS/Linux:**
+
+   ```bash
    source .venv/bin/activate
-3. Install dependencies:
+   ```
+
+4. Install the dependencies:
+
+   ```bash
    python -m pip install --upgrade pip
    python -m pip install pandas vaderSentiment transformers torch gradio jupyter
-4. Place News_Category_Dataset_v3.json where the notebook expects it.
-5. Open the notebook with Jupyter or upload it to Google Colab, then run the cells in order.
-Reproducibility note: Exact dependency versions have not been pinned in this README. For a reproducible setup, record the versions from the environment where the notebook successfully runs and save them in requirements.txt.
+   ```
 
-How to run the application
-The current implementation is notebook-based and expects finance_df, tokenizer, and model to have been created.
-1. Run the data-loading and preprocessing cells.
-2. Run the sector classification and VADER sentiment-analysis cells.
-3. Load the summarization tokenizer and model.
-4. Run the cell that defines the Gradio interface.
-5. When demo.launch(share=True) runs, open the Gradio URL printed in the output.
-6. Choose a news headline from the dropdown and click Analyze Article.
-7. Review the headline, sector, sentiment label, VADER compound score, and AI-generated summary.
-The Gradio share link is temporary; it is not a permanent deployment.
-Testing the application
-1. Check the filtered dataset
+5. Place `News_Category_Dataset_v3.json` in the location expected by the notebook.
+6. Open the notebook using Jupyter or upload it to Google Colab.
+7. Run the notebook cells in order.
+
+**Note:** The project was developed and tested in Google Colab. Package compatibility may vary across Python versions. The commands above install the main dependencies, but the exact versions have not been pinned.
+
+## How to Run the Application
+
+The current application is implemented in a Jupyter/Google Colab notebook.
+
+1. Load the dataset and create the finance-related subset.
+2. Run the text preprocessing and sector classification steps.
+3. Run VADER sentiment analysis.
+4. Load the pretrained DistilBART tokenizer and model using Hugging Face Transformers.
+5. Define the article analysis function.
+6. Run the Gradio interface cell.
+7. Open the Gradio URL displayed in the notebook.
+8. Select a news article from the dropdown menu.
+9. Click **Analyze Article**.
+
+The application displays:
+
+- Article headline
+- Classified financial sector
+- Sentiment label
+- VADER compound sentiment score
+- AI-generated summary
+
+The Gradio sharing URL is temporary and is intended for testing and demonstration rather than permanent deployment.
+
+## Testing the Application
+
+### 1. Test Dataset Processing
+
+Run the following code to verify that the finance-related dataset has been created:
+
+```python
 print("Number of finance-related articles:", len(finance_df))
-print(finance_df[["headline", "primary_sector", "sentiment", "compound"]].head())
-Confirm that the dataframe is populated and the expected columns exist.
-2. Check sentiment results
+
+print(
+    finance_df[
+        ["headline", "primary_sector", "sentiment", "compound"]
+    ].head()
+)
+```
+
+Expected result: The dataframe contains article headlines, assigned sectors, sentiment labels, and compound sentiment scores.
+
+### 2. Test Sentiment Analysis
+
+Run:
+
+```python
 print(finance_df["sentiment"].value_counts())
-print(finance_df.groupby("primary_sector")["compound"].mean().sort_values())
-Confirm that sentiment labels and compound scores are present. Sector counts may be uneven because the classifier uses keyword rules.
-3. Check summarization
+
+print(
+    finance_df.groupby("primary_sector")["compound"]
+    .mean()
+    .sort_values()
+)
+```
+
+Expected result: The output shows sentiment counts and the average compound score for each sector.
+
+### 3. Test AI Summarization
+
+Run:
+
+```python
 analyze_news(finance_df.index[10])
-Confirm that the function displays a headline, sector, sentiment label and score, and generated summary. Inference may be slower on CPU.
-4. Check the Gradio interface
-- Confirm the interface opens from the URL printed by Gradio.
-- Select a headline and click Analyze Article.
-- Confirm all five outputs appear: headline, sector, sentiment, VADER score, and AI-generated summary.
-- Select a second article and confirm the displayed results change.
-Interpreting results
-- VADER sentiment measures the linguistic tone of article text. It does not determine whether an asset price will rise or fall, and it is not investment advice.
-- Sector labels are rule-based classifications and may be imperfect.
-- Generated summaries may omit context or contain errors. Check the original article before relying on a summary.
-- The dataset is general news filtered by keywords, so not every selected article is necessarily a market report.
-Limitations
-- Keyword filtering may include irrelevant articles and miss relevant ones that use different wording.
-- Sector assignment depends on keyword rules.
-- VADER is a general-purpose sentiment tool, not a finance-specific sentiment model.
-- DistilBART can be slow on CPU.
-- The project analyzes article text; it does not use live stock prices or predict market movements.
-Suggested repository structure
-financial-news-sentiment-analyzer/
-├── README.md
-├── News_Category_Dataset_v3.json   # keep local; do not commit unless licensing permits
-└── financial_news_analyzer.ipynb   # replace with your actual notebook filename
-Future improvements
-- Add charts for sentiment distribution and sentiment by sector.
-- Validate and improve sector classification.
+```
+
+Expected result: The function displays the selected article's headline, sector, sentiment, sentiment score, and AI-generated summary.
+
+### 4. Test the Interactive Interface
+
+Verify the following:
+
+- The Gradio interface opens successfully.
+- The article dropdown displays available headlines.
+- Clicking **Analyze Article** generates the analysis.
+- The headline, sector, sentiment, sentiment score, and summary are displayed.
+- Selecting a different article updates the results.
+
+The first summarization request may take several seconds, particularly when running on a CPU.
+
+## Results and Interpretation
+
+The application combines rule-based sector classification, VADER sentiment analysis, and pretrained language-model summarization to provide a concise overview of selected news articles.
+
+Sentiment labels describe the linguistic tone of the article rather than predicting market performance. For example, a negative sentiment score does not necessarily mean that a stock or financial market will decline.
+
+Sector classification is based on keyword rules and may not always identify the correct sector. Generated summaries may also omit important context or contain inaccuracies, so users should consult the original article when necessary.
+
+## Limitations
+
+- The finance-related dataset is created through keyword filtering and may contain irrelevant articles or miss relevant ones.
+- Sector classification relies on predefined keyword rules.
+- VADER is a general-purpose sentiment analysis tool rather than a finance-specific sentiment model.
+- DistilBART summarization may be slow on CPU.
+- The application analyzes article text and does not retrieve live stock prices or predict financial-market movements.
+- The current implementation is notebook-based and has not been packaged as a standalone production application.
+
+## Future Improvements
+
+- Add interactive charts showing sentiment distribution and sentiment by sector.
+- Improve sector classification and evaluate its accuracy.
 - Compare VADER with a finance-specific sentiment model.
-- Add automated tests for preprocessing, sector classification, and sentiment output.
-- Record tested package versions in requirements.txt.
-Disclaimer
-This project is for educational and research purposes only. Sentiment labels and generated summaries are not financial advice and should not be used alone to make investment decisions.
+- Add automated tests for data preprocessing, sector classification, sentiment analysis, and summarization.
+- Record tested dependency versions in a `requirements.txt` file.
+- Develop a standalone web application for easier deployment.
+
+## Disclaimer
+
+This project is intended for educational and research purposes only. Sentiment analysis and AI-generated summaries are not financial advice and should not be used as the sole basis for investment decisions.
